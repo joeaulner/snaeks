@@ -1,0 +1,16 @@
+{
+  "name": "snaks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/pancakeCaptain/snaks.git",
+  "author": "Joe Aulner <joseph.aulner@aviture.us.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "elm-make src/Main.elm --output _src/index.html",
+    "start": "serve _src"
+  },
+  "dependencies": {
+    "elm": "0.18.0",
+    "serve": "5.1.5"
+  }
+}
