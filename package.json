@@ -7,12 +7,14 @@
   "license": "MIT",
   "scripts": {
     "build": "elm-make src/Main.elm --output _src/index.html",
-    "build:watch": "nodemon --watch src --exec 'yarn build'",
-    "start": "serve _src"
+    "build:watch": "nodemon --watch src -e js,elm --exec 'yarn build'",
+    "serve": "serve _src",
+    "start": "run-p build:watch serve"
   },
   "dependencies": {
     "elm": "0.18.0",
     "nodemon": "1.11.0",
+    "npm-run-all": "4.0.2",
     "serve": "5.1.5"
   }
 }

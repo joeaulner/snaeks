@@ -1,12 +1,15 @@
 module Main exposing (main)
 
-import Html exposing (Html, text, div)
-import SvgTest
+import Html exposing (program, div, text)
+import Model
+import Update
+import View
 
 
-main : Html String
 main =
-    div []
-        [ div [] [ text "Hello, World!" ]
-        , SvgTest.view
-        ]
+    program
+        { init = Model.init
+        , update = Update.update
+        , subscriptions = Update.subscriptions
+        , view = View.view
+        }
