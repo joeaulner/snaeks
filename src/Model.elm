@@ -1,9 +1,16 @@
-module Model exposing (Msg(..), Model, Snake, Vector, Direction(..), Point, init)
+module Model exposing (Msg(..), Model, Snake, Vector, Direction(..), Point, UserAction(..), init)
 
 
 type Msg
     = Tick
     | SpawnFood ( Int, Int )
+    | UserInput UserAction
+
+
+type UserAction
+    = NoOp
+    | ChangeDirection Direction
+    | Reset
 
 
 type alias Model =

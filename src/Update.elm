@@ -1,14 +1,17 @@
 module Update exposing (subscriptions, update)
 
+import Char
 import Time exposing (millisecond)
 import Random
-import Model exposing (Model, Msg(..), Vector, Direction(..), Point)
+import Keyboard exposing (KeyCode)
+import Model exposing (Model, Msg(..), Vector, Direction(..), Point, UserAction(..))
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Time.every (125 * millisecond) (\x -> Tick)
+        , Keyboard.presses (UserInput << actionFromKeycode)
         ]
 
 
@@ -20,6 +23,17 @@ update msg model =
 
         SpawnFood ( x, y ) ->
             { model | food = Just <| Point x y } ! []
+
+        UserInput action ->
+            case action of
+                NoOp ->
+                    model ! []
+
+                ChangeDirection direction ->
+                    changeDirection direction model ! []
+
+                Reset ->
+                    Model.init
 
 
 moveSnake : Model -> Model
@@ -65,3 +79,30 @@ spawnFood model =
             |> Random.generate SpawnFood
     else
         Cmd.none
+
+
+changeDirection : Direction -> Model -> Model
+changeDirection direction model =
+    model
+
+
+actionFromKeycode : KeyCode -> UserAction
+actionFromKeycode keycode =
+    case Char.fromCode keycode of
+        'w' ->
+            ChangeDirection North
+
+        'd' ->
+            ChangeDirection East
+
+        's' ->
+            ChangeDirection South
+
+        'a' ->
+            ChangeDirection West
+
+        ' ' ->
+            Reset
+
+        _ ->
+            NoOp
