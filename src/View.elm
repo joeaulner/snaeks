@@ -55,7 +55,7 @@ gameObjects model =
     g
         [ "translate(0 " ++ toString (worldWidth * tileWidth) ++ ") scale(1, -1)" |> transform
         ]
-        [ snake model ]
+        [ snake model, food model ]
 
 
 snake : Model -> Svg Msg
@@ -74,3 +74,18 @@ segment color vector =
         , strokeWidth "0.5"
         ]
         []
+
+
+food : Model -> Svg Msg
+food model =
+    case model.food of
+        Nothing ->
+            g [] []
+
+        Just { x, y } ->
+            square tileWidth
+                [ x * tileWidth |> toString |> Svg.Attributes.x
+                , y * tileWidth |> toString |> Svg.Attributes.y
+                , fill "orange"
+                ]
+                []

@@ -1,12 +1,15 @@
-module Model exposing (Msg(..), Model, Snake, Vector, Direction, init)
+module Model exposing (Msg(..), Model, Snake, Vector, Direction(..), Point, init)
 
 
 type Msg
-    = NoOp
+    = Tick
+    | SpawnFood ( Int, Int )
 
 
 type alias Model =
-    { snake : Snake }
+    { snake : Snake
+    , food : Maybe Point
+    }
 
 
 type alias Snake =
@@ -20,6 +23,12 @@ type alias Vector =
     }
 
 
+type alias Point =
+    { x : Int
+    , y : Int
+    }
+
+
 type Direction
     = North
     | East
@@ -29,7 +38,7 @@ type Direction
 
 init : ( Model, Cmd Msg )
 init =
-    Model initSnake ! []
+    Model initSnake Nothing ! []
 
 
 initSnake : Snake
