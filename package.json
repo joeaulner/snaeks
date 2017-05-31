@@ -6,12 +6,15 @@
   "author": "Joe Aulner <joseph.aulner@aviture.us.com>",
   "license": "MIT",
   "scripts": {
-    "build": "elm-make src/Main.elm --output _src/index.html",
-    "build:watch": "nodemon --watch src -e js,elm --exec 'yarn build'",
+    "build:styles": "copyfiles -u 2 src/styles/*.css _src/styles",
+    "build:elm": "elm-make src/app/Main.elm --output _src/index.html",
+    "build": "run-p build:styles build:elm",
+    "build:watch": "nodemon --watch src -e js,elm,css --exec 'yarn build'",
     "serve": "serve _src",
     "start": "run-p build:watch serve"
   },
   "dependencies": {
+    "copyfiles": "1.2.0",
     "elm": "0.18.0",
     "nodemon": "1.11.0",
     "npm-run-all": "4.0.2",

@@ -1,4 +1,4 @@
-module Model exposing (Msg(..), Model, Snake, Vector, Direction(..), Point, UserAction(..), init)
+module Model exposing (Msg(..), Model, Snake, Vector, Direction(..), Point, UserAction(..), init, worldSize)
 
 
 type Msg
@@ -16,6 +16,7 @@ type UserAction
 type alias Model =
     { snake : Snake
     , food : Maybe Point
+    , collision : Bool
     }
 
 
@@ -45,9 +46,14 @@ type Direction
 
 init : ( Model, Cmd Msg )
 init =
-    Model initSnake Nothing ! []
+    Model initSnake Nothing False ! []
 
 
 initSnake : Snake
 initSnake =
     [ Vector 15 15 North, Vector 15 14 North, Vector 15 13 North ]
+
+
+worldSize : Int
+worldSize =
+    32
