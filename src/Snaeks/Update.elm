@@ -1,11 +1,11 @@
-module Update exposing (subscriptions, update)
+module Snaeks.Update exposing (subscriptions, update)
 
 import Char
 import Time exposing (millisecond)
 import Random
 import Keyboard exposing (KeyCode)
-import Extra.List as List
-import Model exposing (Model, Msg(..), Vector, Direction(..), Point, UserAction(..), Snake, worldSize)
+import Snaeks.Extra.List as List
+import Snaeks.Model as Model exposing (Model, Msg(..), Vector, Direction(..), Point, UserAction(..), Snake, worldSize)
 
 
 subscriptions : Model -> Sub Msg

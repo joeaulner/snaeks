@@ -1,4 +1,15 @@
-module Model exposing (Msg(..), Model, Snake, Vector, Direction(..), Point, UserAction(..), init, worldSize)
+module Snaeks.Model
+    exposing
+        ( Msg(..)
+        , Model
+        , Snake
+        , Vector
+        , Direction(..)
+        , Point
+        , UserAction(..)
+        , init
+        , worldSize
+        )
 
 
 type Msg

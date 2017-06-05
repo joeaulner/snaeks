@@ -1,4 +1,4 @@
-module Extra.List exposing (dropTail)
+module Snaeks.Extra.List exposing (dropTail)
 
 
 dropTail : Int -> List a -> List a
