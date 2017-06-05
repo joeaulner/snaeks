@@ -27,7 +27,7 @@ view model =
                 ]
                 []
     in
-        Html.body []
+        Html.div [ Html.class "content" ]
             [ stylesheet
             , Html.div []
                 [ Html.h1 [] [ Html.text "Welcome to Snæks!" ]
