@@ -34,7 +34,7 @@ view model =
     in
         Html.div [ Html.class "content" ]
             [ stylesheet
-            , Html.a [ Html.href "https://github.com/pancakeCaptain/snaeks", Html.target "_blank" ]
+            , Html.a [ Html.href "https://github.com/pancakeCaptain/snaeks", Html.target "_blank", Html.rel "noopener" ]
                 [ Html.img [ Html.class "github-image", Html.src githubImageSrc, Html.alt "Fork me on GitHub" ] []
                 ]
             , Html.div []
