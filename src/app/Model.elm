@@ -11,12 +11,14 @@ type UserAction
     = NoOp
     | ChangeDirection Direction
     | Reset
+    | Start
 
 
 type alias Model =
     { snake : Snake
     , food : Maybe Point
     , collision : Bool
+    , started : Bool
     }
 
 
@@ -46,7 +48,7 @@ type Direction
 
 init : ( Model, Cmd Msg )
 init =
-    Model initSnake Nothing False ! []
+    Model initSnake Nothing False False ! []
 
 
 initSnake : Snake

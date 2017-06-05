@@ -5,4 +5,4 @@ repl-temp-*
 # node modules
 node_modules
 # build artifacts
-_src
+out

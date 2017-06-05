@@ -6,18 +6,40 @@
   "author": "Joe Aulner <joseph.aulner@aviture.us.com>",
   "license": "MIT",
   "scripts": {
-    "build:styles": "copyfiles -u 2 src/styles/*.css _src/styles",
-    "build:elm": "elm-make src/app/Main.elm --output _src/index.html",
-    "build": "run-p build:styles build:elm",
-    "build:watch": "nodemon --watch src -e js,elm,css --exec 'yarn build'",
-    "serve": "serve _src",
-    "start": "run-p build:watch serve"
+    "styles": "copyfiles -u 2 src/styles/*.css out/styles",
+    "elm": "elm-make src/app/Main.elm --output out/index.html",
+    "styles:watch": "nodemon --exec 'yarn styles' -L --watch src/styles -e css",
+    "elm:watch": "nodemon --exec 'yarn elm' -L --watch src/app -e js,elm",
+    "build": "run-p styles elm",
+    "build:watch": "run-p styles:watch elm:watch",
+    "serve": "serve out",
+    "start": "run-p build:watch serve",
+    "start:prod": "run-s build serve",
+    "deploy": "now --public --docker",
+
+    "docker:build": "docker build --no-cache -t snaeks .",
+    "docker:start": "docker run --entrypoint yarn -v $(pwd)/src:/opt/snaeks/src -v $(pwd)/out:/opt/snaeks/out -p 5000:5000 snaeks start"
+  },
+  "now": {
+    "name": "snaeks",
+    "alias": "snaeks",
+    "files": [
+      "package.json",
+      "yarn.lock",
+      "elm-package.json",
+      "src"
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    }
   },
   "dependencies": {
     "copyfiles": "1.2.0",
     "elm": "0.18.0",
-    "nodemon": "1.11.0",
     "npm-run-all": "4.0.2",
     "serve": "5.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "1.11.0"
   }
 }

@@ -18,23 +18,34 @@ subscriptions model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        Tick ->
-            moveSnake model ! [ spawnFood model ]
+    if model.started then
+        case msg of
+            Tick ->
+                moveSnake model ! [ spawnFood model ]
 
-        SpawnFood ( x, y ) ->
-            { model | food = Just <| Point x y } ! []
+            SpawnFood ( x, y ) ->
+                { model | food = Just <| Point x y } ! []
 
-        UserInput action ->
-            case action of
-                NoOp ->
-                    model ! []
+            UserInput action ->
+                case action of
+                    NoOp ->
+                        model ! []
 
-                ChangeDirection direction ->
-                    { model | snake = changeDirection direction model.snake } ! []
+                    ChangeDirection direction ->
+                        { model | snake = changeDirection direction model.snake } ! []
 
-                Reset ->
-                    Model.init
+                    Reset ->
+                        Model.init
+
+                    _ ->
+                        model ! []
+    else
+        case msg of
+            UserInput Start ->
+                { model | started = True } ! []
+
+            _ ->
+                model ! []
 
 
 moveSnake : Model -> Model
@@ -170,6 +181,9 @@ actionFromKeycode keycode =
             ChangeDirection West
 
         ' ' ->
+            Start
+
+        '\x0D' ->
             Reset
 
         _ ->

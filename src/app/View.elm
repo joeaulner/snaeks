@@ -33,7 +33,8 @@ view model =
                 [ Html.h1 [] [ Html.text "Welcome to Snæks!" ]
                 , Html.div [ Html.class "instructions" ]
                     [ Html.div [] [ Html.text "Use WASD to move" ]
-                    , Html.div [] [ Html.text "Press [Space] to reset" ]
+                    , Html.div [] [ Html.text "Press [Space] to start" ]
+                    , Html.div [] [ Html.text "Press [Enter] to reset" ]
                     ]
                 ]
             , Svg.svg
