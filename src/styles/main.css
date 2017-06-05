@@ -12,6 +12,13 @@ html {
     align-items: center;
 }
 
+.github-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+}
+
 .instructions {
     display: flex;
     flex-direction: column;
