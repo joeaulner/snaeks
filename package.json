@@ -12,7 +12,7 @@
     "static:watch": "nodemon --exec 'yarn static' -L --watch src -e html,css",
     "elm:watch": "nodemon --exec 'yarn elm' -L --watch src -e elm",
     
-    "build": "run-p static elm",
+    "build": "mkdir -p out/scripts && run-p static elm",
     "build:watch": "run-p static:watch elm:watch",
     
     "serve": "serve out",
