@@ -7,17 +7,18 @@
   "license": "MIT",
   "scripts": {
     "static": "copyfiles -u 1 -e '**/*.elm' 'src/*' 'src/**/*' out",
-    "elm": "elm-make src/Snaeks.elm --output out/scripts/snaeks.js",
-    
+    "elm": "elm-make src/Snaeks.elm --output out/scripts/snaeks.js --yes",
+    "uglify": "uglifyjs out/scripts/snaeks.js --compress --mangle --output out/scripts/snaeks.js",
+
     "static:watch": "nodemon --exec 'yarn static' -L --watch src -e html,css",
     "elm:watch": "nodemon --exec 'yarn elm' -L --watch src -e elm",
-    
-    "build": "mkdir -p out/scripts && run-p static elm",
+
+    "build": "mkdir -p out/scripts && run-s static elm uglify",
     "build:watch": "run-p static:watch elm:watch",
-    
+
     "serve": "serve out",
     "start": "run-p build:watch serve",
-    
+
     "docker:build": "docker build --no-cache -t snaeks .",
     "docker:start": "docker run --entrypoint yarn -v $(pwd)/src:/opt/snaeks/src -v $(pwd)/out:/opt/snaeks/out -p 5000:5000 snaeks start",
 
@@ -41,7 +42,8 @@
     "copyfiles": "1.2.0",
     "elm": "0.18.0",
     "npm-run-all": "4.0.2",
-    "serve": "5.1.5"
+    "serve": "5.1.5",
+    "uglify-js": "3.0.15"
   },
   "devDependencies": {
     "nodemon": "1.11.0"
