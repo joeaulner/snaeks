@@ -4,6 +4,25 @@
         <title>Snaeks</title>
         <link rel="stylesheet" type="text/css" href="styles/loader.css">
         <link rel="stylesheet" type="text/css" href="styles/main.css">
+
+        <script>
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.onerror = loadGameFailed;
+            script.onload = startGame;
+            
+            document.head.appendChild(script);
+            script.src = 'scripts/snaeks.js';
+
+            function startGame() {
+                var node = document.getElementById('game');
+                var app = Elm.Snaeks.embed(node);
+            }
+
+            function loadGameFailed(error) {
+                document.getElementById('game').innerHTML = '<h2>Failed to load game...</h2>';
+            }
+        </script>
     </head>
     <body>
         <div class="content">
@@ -32,11 +51,5 @@
                 </div>
             </div>
         </div>
-
-        <script src="scripts/snaeks.js"></script>
-        <script>
-            var node = document.getElementById('game');
-            var app = Elm.Snaeks.embed(node);
-        </script>
     </body>
 </html>
