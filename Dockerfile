@@ -12,6 +12,7 @@ COPY elm-package.json /opt/snaeks
 RUN elm package install -y
 
 COPY src /opt/snaeks/src
+RUN yarn build
 
 EXPOSE 5000
-ENTRYPOINT yarn start:prod
+ENTRYPOINT yarn serve
