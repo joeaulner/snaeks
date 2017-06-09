@@ -6,3 +6,5 @@ repl-temp-*
 node_modules
 # build artifacts
 out
+# vs code configuration
+.vscode

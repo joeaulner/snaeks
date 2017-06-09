@@ -6,21 +6,18 @@
   "author": "Joe Aulner <joseph.aulner@aviture.us.com>",
   "license": "MIT",
   "scripts": {
-    "static": "copyfiles -u 1 -e '**/*.elm' 'src/*' 'src/**/*' out",
-    "elm": "elm-make src/Snaeks.elm --output out/scripts/snaeks.js --yes",
-    "uglify": "uglifyjs out/scripts/snaeks.js --compress --mangle --output out/scripts/snaeks.js",
-
-    "static:watch": "nodemon --exec 'yarn static' -L --watch src -e html,css",
-    "elm:watch": "nodemon --exec 'yarn elm' -L --watch src -e elm",
-
-    "build": "mkdir -p out/scripts && run-s static elm uglify",
+    "static": "copyfiles -u 2 -e '**/*.elm' 'src/web/*' 'src/web/**/*' src/out",
+    "elm": "elm-make src/web/Snaeks.elm --output src/out/scripts/snaeks.js --yes",
+    "uglify": "uglifyjs src/out/scripts/snaeks.js --compress --mangle --output src/out/scripts/snaeks.js",
+    "static:watch": "nodemon --exec 'yarn static' -L --watch src --ignore out -e html,css",
+    "elm:watch": "nodemon --exec 'yarn elm' -L --watch src --ignore out -e elm",
+    "build": "mkdir -p src/out/scripts && run-s static elm uglify",
     "build:watch": "run-p static:watch elm:watch",
-
-    "serve": "serve out",
-    "start": "run-p build:watch serve",
-
+    "serve": "node src/index.js",
+    "serve:watch": "nodemon -L --watch src --ignore out -e js src/index.js",
+    "start": "run-p build:watch serve:watch",
     "docker:build": "docker build --no-cache -t snaeks .",
-    "docker:start": "docker run --entrypoint yarn -v $(pwd)/src:/opt/snaeks/src -v $(pwd)/out:/opt/snaeks/out -p 5000:5000 snaeks start",
+    "docker:start": "docker run --entrypoint yarn -v $(pwd)/src:/opt/snaeks/src -p 5000:5000 snaeks start",
     "deploy": "now --public --docker"
   },
   "now": {
@@ -39,8 +36,9 @@
   "dependencies": {
     "copyfiles": "1.2.0",
     "elm": "0.18.0",
+    "express": "4.15.3",
     "npm-run-all": "4.0.2",
-    "serve": "5.1.5",
+    "socket.io": "2.0.2",
     "uglify-js": "3.0.15"
   },
   "devDependencies": {
