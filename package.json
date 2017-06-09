@@ -7,18 +7,15 @@
   "license": "MIT",
   "scripts": {
     "static": "copyfiles -u 2 -e '**/*.elm' 'src/web/*' 'src/web/**/*' src/out",
-    "elm": "elm-make src/web/Snaeks.elm --output src/out/scripts/snaeks.js --yes",
-    "uglify": "uglifyjs src/out/scripts/snaeks.js --compress --mangle --output src/out/scripts/snaeks.js",
     "static:watch": "nodemon --exec 'yarn static' -L --watch src --ignore out -e html,css",
+    "elm": "elm-make src/web/Snaeks.elm --output src/out/scripts/snaeks.js --yes",
     "elm:watch": "nodemon --exec 'yarn elm' -L --watch src --ignore out -e elm",
-    "build": "mkdir -p src/out/scripts && run-s static elm uglify",
-    "build:watch": "run-p static:watch elm:watch",
-    "serve": "node src/index.js",
-    "serve:watch": "nodemon -L --watch src --ignore out -e js src/index.js",
-    "start": "run-p build:watch serve:watch",
-    "docker:build": "docker build --no-cache -t snaeks .",
-    "docker:start": "docker run --entrypoint yarn -v $(pwd)/src:/opt/snaeks/src -p 5000:5000 snaeks start",
-    "deploy": "now --public --docker"
+    "uglify": "uglifyjs src/out/scripts/snaeks.js --compress --mangle --output src/out/scripts/snaeks.js",
+    "build": "run-p static:watch elm:watch",
+    "now-build": "mkdir -p src/out/scripts && run-s static elm uglify",
+    "start": "nodemon -L --watch src --ignore out -e js src/index.js",
+    "now-start": "node src/index.js",
+    "dev": "run-p build start"
   },
   "now": {
     "name": "snaeks",

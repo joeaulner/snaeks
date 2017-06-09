@@ -1,7 +1,6 @@
 module Snaeks.View exposing (view)
 
 import Html exposing (Html)
-import Html.Attributes as Html
 import Svg exposing (Svg, Attribute)
 import Svg.Attributes as Svg
 import Snaeks.Model exposing (Model, Msg, Snake, Vector, worldSize)
