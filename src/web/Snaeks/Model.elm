@@ -3,7 +3,6 @@ module Snaeks.Model
         ( Msg(..)
         , Model
         , Snake
-        , Vector
         , Direction(..)
         , Point
         , UserAction(..)
@@ -13,8 +12,7 @@ module Snaeks.Model
 
 
 type Msg
-    = Tick
-    | SpawnFood ( Int, Int )
+    = SocketTick String
     | UserInput UserAction
 
 
@@ -28,20 +26,11 @@ type UserAction
 type alias Model =
     { snake : Snake
     , food : Maybe Point
-    , collision : Bool
-    , started : Bool
     }
 
 
 type alias Snake =
-    List Vector
-
-
-type alias Vector =
-    { x : Int
-    , y : Int
-    , d : Direction
-    }
+    List Point
 
 
 type alias Point =
@@ -59,12 +48,7 @@ type Direction
 
 init : ( Model, Cmd Msg )
 init =
-    Model initSnake Nothing False False ! []
-
-
-initSnake : Snake
-initSnake =
-    [ Vector 15 15 North, Vector 15 14 North, Vector 15 13 North ]
+    Model [] Nothing ! []
 
 
 worldSize : Int

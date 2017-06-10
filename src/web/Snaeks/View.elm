@@ -3,7 +3,7 @@ module Snaeks.View exposing (view)
 import Html exposing (Html)
 import Svg exposing (Svg, Attribute)
 import Svg.Attributes as Svg
-import Snaeks.Model exposing (Model, Msg, Snake, Vector, worldSize)
+import Snaeks.Model exposing (Model, Msg, Snake, Point, worldSize)
 
 
 tileWidth : Int
@@ -52,18 +52,11 @@ gameObjects model =
 
 snake : Model -> Svg Msg
 snake model =
-    let
-        color =
-            if model.collision then
-                "#cc0000"
-            else
-                "purple"
-    in
-        List.map (segment color) model.snake
-            |> Svg.g []
+    List.map (segment "purple") model.snake
+        |> Svg.g []
 
 
-segment : String -> Vector -> Svg Msg
+segment : String -> Point -> Svg Msg
 segment color vector =
     square tileWidth
         [ vector.x * tileWidth |> toString |> Svg.x
