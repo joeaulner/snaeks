@@ -69,7 +69,24 @@ class Player {
     }
 
     changeDirection(message) {
-        this.snake[0].d = Direction[message];
+        const head = this.snake[0];
+        const next = this.snake[1];
+        const d = Direction[message];
+
+        switch (d) {
+            case Direction.NORTH:
+                head.d = next.y === head.y + 1 ? head.d : d;
+                break;
+            case Direction.EAST:
+                head.d = next.x === head.x + 1 ? head.d : d;
+                break;
+            case Direction.SOUTH:
+                head.d = next.y === head.y - 1 ? head.d : d;
+                break;
+            case Direction.WEST:
+                head.d = next.x === head.x - 1 ? head.d : d;
+                break;
+        }
     }
 }
 
