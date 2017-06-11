@@ -1,10 +1,12 @@
 module Snaeks exposing (main)
 
+import Char
 import String
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import WebSocket
+import Keyboard exposing (KeyCode)
 import World exposing (World)
 
 
@@ -39,12 +41,7 @@ type Msg
     = NameInput String
     | JoinGame
     | GameTick String
-
-
-type UserAction
-    = NoOp
-    | ChangeDirection Direction
-    | Start
+    | UserInput KeyCode
 
 
 type Direction
@@ -60,17 +57,20 @@ type Direction
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    let
-        socket =
-            if model.started then
+    if model.started then
+        let
+            webSocket =
                 WebSocket.listen ("ws://localhost:5000/game?name=" ++ model.name) GameTick
-            else
-                Sub.none
-    in
-        Sub.batch [ socket ]
+
+            keyboard =
+                Keyboard.presses UserInput
+        in
+            Sub.batch [ webSocket, keyboard ]
+    else
+        Sub.none
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case msg of
         NameInput name ->
@@ -84,6 +84,37 @@ update msg model =
 
         GameTick json ->
             { model | world = World.update json model.world } ! []
+
+        UserInput keyCode ->
+            model ! [ handleUserInput model keyCode ]
+
+
+handleUserInput : Model -> KeyCode -> Cmd msg
+handleUserInput model keyCode =
+    let
+        send =
+            sendMessage model
+    in
+        case Char.fromCode keyCode of
+            'w' ->
+                send "NORTH"
+
+            'd' ->
+                send "EAST"
+
+            's' ->
+                send "SOUTH"
+
+            'a' ->
+                send "WEST"
+
+            _ ->
+                Cmd.none
+
+
+sendMessage : Model -> String -> Cmd msg
+sendMessage model str =
+    WebSocket.send ("ws://localhost:5000/game?name=" ++ model.name) str
 
 
 

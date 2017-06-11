@@ -4,7 +4,7 @@ const app = express();
 const server = require('http').createServer(app);
 const WebSocket = require('ws');
 const ws = require('express-ws')(app);
-const routes = require('./api/routes');
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -12,33 +12,93 @@ app.get('/', (req, res) => {
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 
-app.use('/api', routes);
-
 app.listen(5000, () => {
     console.log('The server is running: http://localhost:5000');
 });
 
-const players = new Map();
+
+
+// WORLD DEFINITION
+
+
+class Segment {
+    constructor(x, y, d) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+class SnakeSegment extends Segment {
+    constructor(x, y, d) {
+        super(x, y);
+        this.d = d;
+    }
+}
 
 class Player {
     constructor(name) {
         this.name = name;
         this.snake = [
-            { x: 15, y: 15, d: 'NORTH' },
-            { x: 15, y: 14, d: 'NORTH' },
-            { x: 15, y: 13, d: 'NORTH' }
+            new SnakeSegment(0, 0, Direction.NORTH),
+            new SnakeSegment(0, -1, Direction.NORTH),
+            new SnakeSegment(0, -2, Direction.NORTH)
         ];
+    }
+
+    moveSnake() {
+        const head = this.snake[0];
+        var newHead;
+
+        switch (head.d) {
+            case Direction.NORTH:
+                newHead = new SnakeSegment(head.x, head.y + 1, head.d);
+                break;
+            case Direction.EAST:
+                newHead = new SnakeSegment(head.x + 1, head.y, head.d);
+                break;
+            case Direction.SOUTH:
+                newHead = new SnakeSegment(head.x, head.y - 1, head.d);
+                break;
+            case Direction.WEST:
+                newHead = new SnakeSegment(head.x - 1, head.y, head.d);
+                break;
+        }
+
+        this.snake.pop();
+        this.snake.unshift(newHead);
+    }
+
+    changeDirection(message) {
+        this.snake[0].d = Direction[message];
     }
 }
 
+class Direction {
+    constructor(name) {
+        this.name = name;
+    }
+}
+Direction.NORTH = new Direction('NORTH');
+Direction.EAST = new Direction('EAST');
+Direction.SOUTH = new Direction('SOUTH');
+Direction.WEST = new Direction('WEST');
+
+const players = new Map();
+
+
+
+// SOCKET BEHAVIOR
+
+
 app.ws('/game', (ws, req) => {
-    const player = new Player(req.query.name);
-    players.set(ws, player);
-    ws.send(JSON.stringify(player.snake));
+    players.set(ws, new Player(req.query.name));
+    sendData(ws);
     
     ws.on('message', message => {
-        // this is where we'll handle directional input
-        console.log(`Received message: ${message}`);
+        if (Direction[message]) {
+            const player = players.get(ws);
+            player.changeDirection(message);
+        }
     });
 
     ws.on('close', arg => {
@@ -46,13 +106,24 @@ app.ws('/game', (ws, req) => {
     });
 });
 
-setInterval(() => {
-    ws.getWss().clients.forEach(client => {
-        const snake = players.get(client).snake;
-        snake.forEach(segment => segment.y++);
 
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(snake));
-        }
-    });
-}, 500);
+
+// WORLD UPDATES
+
+
+// update snakes every 200 millseconds
+setInterval(() => {
+    ws.getWss().clients.forEach(client => players.get(client).moveSnake());
+}, 200);
+
+// send snake data every 50 milliseconds
+setInterval(() => {
+    ws.getWss().clients.forEach(sendData);
+}, 50);
+
+function sendData(client) {
+    if (client.readyState === WebSocket.OPEN) {
+        const snake = players.get(client).snake;
+        client.send(JSON.stringify(snake));
+    }
+}
