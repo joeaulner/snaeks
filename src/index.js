@@ -5,7 +5,6 @@ const server = require('http').createServer(app);
 const WebSocket = require('ws');
 const ws = require('express-ws')(app);
 
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -16,10 +15,7 @@ app.listen(5000, () => {
     console.log('The server is running: http://localhost:5000');
 });
 
-
-
 // WORLD DEFINITION
-
 
 class Segment {
     constructor(x, y, d) {
@@ -102,15 +98,12 @@ Direction.WEST = new Direction('WEST');
 
 const players = new Map();
 
-
-
 // SOCKET BEHAVIOR
-
 
 app.ws('/game', (ws, req) => {
     players.set(ws, new Player(req.query.name));
     sendData(ws);
-    
+
     ws.on('message', message => {
         if (Direction[message]) {
             const player = players.get(ws);
@@ -123,10 +116,7 @@ app.ws('/game', (ws, req) => {
     });
 });
 
-
-
 // WORLD UPDATES
-
 
 // update snakes every 200 millseconds
 setInterval(() => {
