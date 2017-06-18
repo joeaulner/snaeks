@@ -15,7 +15,8 @@
     "now-build": "mkdir -p src/public/scripts && run-s static elm uglify",
     "start": "nodemon --inspect=5858 -L --watch src --ignore public -e js src/index.js",
     "now-start": "node src/index.js",
-    "dev": "run-p build start"
+    "dev": "run-p build start",
+    "precommit": "lint-staged"
   },
   "now": {
     "name": "snaeks",
@@ -30,6 +31,12 @@
       "NODE_ENV": "production"
     }
   },
+  "lint-staged": {
+    "*.js": [
+      "prettier --tab-width 4 --single-quote --write",
+      "git add"
+    ]
+  },
   "dependencies": {
     "copyfiles": "1.2.0",
     "elm": "0.18.0",
@@ -39,6 +46,9 @@
     "uglify-js": "3.0.15"
   },
   "devDependencies": {
-    "nodemon": "1.11.0"
+    "husky": "0.13.4",
+    "lint-staged": "4.0.0",
+    "nodemon": "1.11.0",
+    "prettier": "1.4.4"
   }
 }
